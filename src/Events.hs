@@ -44,25 +44,29 @@ onTick timePassed world@Running { timeElapsed = timeOld } = let
   return (run world totalTimePassed) { timeElapsed = newTimePassed } where
   run :: WorldState -> Float -> WorldState
   run w@Running{
+    pause = paus,
     lastBlock = lb, 
     lastBlockMovement = lbm, 
     lanes = l, 
     paddlePosition = pos, 
     paddleStack = ps, 
     paddleMovement = mov,
-    moveOnce = movO} t = if t < tickLength then w else let
+    moveOnce = movO, 
+    nextKlaxToRemove = nextKlax } t  
+    | t < tickLength  = w 
+    | otherwise       = let
     mov' = if movO == MStay then mov else movO
     pos' = case mov' of 
       MLeft  -> max 0 (pos - 1)
       MRight -> min (lanesCount - 1) (pos + 1)
       MStay  -> pos
-    w1 = w { paddlePosition = pos', moveOnce = MStay } 
-    klax = klaxAchieved w1 in 
-
-    case klax of 
-      Just klax' -> run (compressStack $ deleteKlax klax' w1) (t - tickLength)
+    w1 = w { paddlePosition = pos', moveOnce = MStay } in
+    if paus > 0 then trace (show paus) $ run (w1 {pause = paus - 1}) (t - tickLength) else 
+    case nextKlax of 
+    Just klax -> run (compressStack $ deleteKlax klax w1 { nextKlaxToRemove = Nothing }) (t - tickLength)
+    _ -> case klaxAchieved w1 of 
+      klax@(Just _) -> run (w1 { pause = 2, nextKlaxToRemove = klax }) (t - tickLength)
       _ -> let 
-    
         (w2, newBlocks) = if lb == blockEvery - 1 then generateBlocks w1 else (w1, replicate lanesCount Nothing)
         w3 = w2 { lastBlock = (lb + 1) `mod` blockEvery }
         (lanes', stackTop) = if lbm == blockSpeed - 1 then tickLanes newBlocks l else (l, replicate lanesCount Nothing)

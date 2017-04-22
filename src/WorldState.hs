@@ -23,7 +23,9 @@ initialWorld r = Running {
   , paddlePosition = 0
   , paddleStack = []
   , paddleMovement = MStay
-  , moveOnce = MStay } where
+  , moveOnce = MStay
+  , pause = 0
+  , nextKlaxToRemove = Nothing } where
   emptyLane = replicate laneLength Nothing
   emptyStackLane = replicate lanesCount Nothing
 
@@ -38,6 +40,8 @@ data WorldState = Running {
   , paddleStack :: [Block]
   , paddleMovement :: Direction
   , moveOnce :: Direction
+  , pause :: Int
+  , nextKlaxToRemove :: Maybe [Position]
   }
 
 data Direction = MStay | MLeft | MRight deriving (Eq, Ord, Show)

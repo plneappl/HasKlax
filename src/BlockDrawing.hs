@@ -11,10 +11,20 @@ blockHeightLane   = 1 / fromIntegral laneLength
 blockHeightStack  = 1 / fromIntegral stackHeight
 blockHeightPaddle = 1 / fromIntegral (paddleStackHeight + 1)
 
+
+myYellow :: Color
+myYellow = makeColor 0.88 0.75 0.15 1
+
 drawBlock :: Float -> Block -> Picture
-drawBlock h (B BRed  ) = color red   $ rectangleSolid blockWidth h
-drawBlock h (B BBlue ) = color blue  $ rectangleSolid blockWidth h
-drawBlock h (B BGreen) = color green $ rectangleSolid blockWidth h
+drawBlock h (B BRed   ) = color (dark rose)         $ rectangleSolid blockWidth h
+drawBlock h (B BYellow) = color  myYellow           $ rectangleSolid blockWidth h     
+drawBlock h (B BBlue  ) = color (dim azure)         $ rectangleSolid blockWidth h     
+drawBlock h (B BOrange) = color (dim orange)        $ rectangleSolid blockWidth h     
+drawBlock h (B BWhite ) = color (dark $ dark white) $ rectangleSolid blockWidth h     
+drawBlock h (B BGreen ) = color (dark green)        $ rectangleSolid blockWidth h     
+drawBlock h (B BPink  ) = color (dark chartreuse)   $ rectangleSolid blockWidth h     
+
+
 
 drawMaybeBlock :: Float -> Maybe Block -> Picture
 drawMaybeBlock h Nothing  = color white $ rectangleWire blockWidth h
