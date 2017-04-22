@@ -21,11 +21,16 @@ fps = 60
 
 -- tick length in seconds
 tickLength :: Float
-tickLength = 0.3
+tickLength = 0.15
 
 -- how many ticks for one new block
+-- needs to be a multiple of blockSpeed, so blocks can move when new blocks appear
 blockEvery :: Int
-blockEvery = 5
+blockEvery = 5 * blockSpeed
+
+-- how many ticks per block movement
+blockSpeed :: Int
+blockSpeed = 2
 
 laneLength, lanesCount, stackHeight, klaxMinLength, paddleStackHeight :: Int
 laneLength = 20
