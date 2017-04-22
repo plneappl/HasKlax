@@ -69,6 +69,6 @@ klaxAchieved Running {stackingArea = sa} = diagonalKlax1 sa <|> diagonalKlax2 sa
     strpsJust = filter (\((_, _, b):_) -> isJust b) strpLenOk in
     fmap (\(x, y, _) -> (x, y)) <$> listToMaybe strpsJust
 
-  diagonalKlax2 = fmap (fmap swap) . diagonalKlax1 . transpose                                   
+  diagonalKlax2 = fmap (fmap (\(x, y) -> (lanesCount - x - 1, y))) . diagonalKlax1 . reverse                                   
 
 

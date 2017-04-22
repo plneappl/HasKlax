@@ -47,9 +47,9 @@ snd3 (a, b, c) = b
 trd3 (a, b, c) = c
 
 prefixes, suffixes :: [a] -> [[a]]
-suffixes xs@(y:ys) = xs:prefixes ys 
+suffixes xs@(y:ys) = xs:suffixes ys 
 suffixes [] = [[]]
-prefixes = suffixes . reverse
+prefixes = map reverse . suffixes . reverse
 
 indexed :: [[a]] -> [(Int, [(Int, a)])]
 indexed  = zip [0..] . map (zip [0..]) 
@@ -58,6 +58,8 @@ stripes :: [(Int, [(Int, a)])] -> [[(Int, Int, a)]]
 stripes idxbs@((x, (y, b):rows):cols) = let 
   othersOneDown = map (onSnd tail) cols
   thisStripe = oneStripe idxbs
+  -- use all prefixes, since we get all suffixes from recursion
+  thisStripes = prefixes thisStripe
   -- all stripes in the lower right corner
   -- already visited by others
   --otherStripes1 = stripes othersOneDown
@@ -65,7 +67,7 @@ stripes idxbs@((x, (y, b):rows):cols) = let
   otherStripes2 = stripes cols
   -- all stripes one down
   otherStripes3 = stripes ((x, rows):othersOneDown) in
-  thisStripe : otherStripes2 ++ otherStripes3
+  thisStripes ++ otherStripes2 ++ otherStripes3
 stripes _ = []
 
 oneStripe :: [(Int, [(Int, a)])] -> [(Int, Int, a)]

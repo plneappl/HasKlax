@@ -60,7 +60,7 @@ onTick timePassed world@Running { timeElapsed = timeOld } = let
     klax = klaxAchieved w1 in 
 
     case klax of 
-      Just klax' -> compressStack $ deleteKlax klax' w 
+      Just klax' -> run (compressStack $ deleteKlax klax' w1) (t - tickLength)
       _ -> let 
     
         (w2, newBlocks) = if lb == blockEvery - 1 then generateBlocks w1 else (w1, replicate lanesCount Nothing)
